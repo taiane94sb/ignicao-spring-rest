@@ -3,6 +3,7 @@ package com.taianesb.transito.api.controller;
 import com.taianesb.transito.domain.model.Proprietario;
 import com.taianesb.transito.domain.repository.ProprietarioRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +25,14 @@ public class ProprietarioController {
     }
 
     @GetMapping("/{proprietarioId}")
-    public Proprietario buscar(@PathVariable Long proprietarioId) {
+    public ResponseEntity<Proprietario> buscar(@PathVariable Long proprietarioId) {
         Optional<Proprietario> proprietario = proprietarioRepository.findById(proprietarioId);
-        return proprietario.orElse(null);
+
+        if (proprietario.isPresent()) {
+            return ResponseEntity.ok(proprietario.get());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 }
