@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -26,13 +25,15 @@ public class ProprietarioController {
 
     @GetMapping("/{proprietarioId}")
     public ResponseEntity<Proprietario> buscar(@PathVariable Long proprietarioId) {
-        Optional<Proprietario> proprietario = proprietarioRepository.findById(proprietarioId);
+        return proprietarioRepository.findById(proprietarioId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
 
-        if (proprietario.isPresent()) {
-            return ResponseEntity.ok(proprietario.get());
-        }
-
-        return ResponseEntity.notFound().build();
+//        if (proprietario.isPresent()) {
+//            return ResponseEntity.ok(proprietario.get());
+//        }
+//
+//        return ResponseEntity.notFound().build();
     }
 
 }
