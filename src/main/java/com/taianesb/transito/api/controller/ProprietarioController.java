@@ -18,4 +18,14 @@ public class ProprietarioController {
     public List<Proprietario> listar() {
         return proprietarioRepository.findAll();
     }
+
+    @GetMapping("/proprietarios/findByNome")
+    public List<Proprietario> findByName() {
+        return proprietarioRepository.findByNome("Taiane");
+    }
+
+    @GetMapping("/proprietarios/findByNomeContaining")
+    public List<Proprietario> findByNameContaining() {
+        return proprietarioRepository.findByNomeContaining("the");
+    }
 }
