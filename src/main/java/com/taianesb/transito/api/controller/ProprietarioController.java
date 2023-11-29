@@ -4,28 +4,29 @@ import com.taianesb.transito.domain.model.Proprietario;
 import com.taianesb.transito.domain.repository.ProprietarioRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/proprietarios")
 public class ProprietarioController {
 
     private final ProprietarioRepository proprietarioRepository;
 
-    @GetMapping("/proprietarios")
+    @GetMapping
     public List<Proprietario> listar() {
         return proprietarioRepository.findAll();
     }
 
-    @GetMapping("/proprietarios/findByNome")
-    public List<Proprietario> findByName() {
-        return proprietarioRepository.findByNome("Taiane");
+    @GetMapping("/{proprietarioId}")
+    public Proprietario buscar(@PathVariable Long proprietarioId) {
+        Optional<Proprietario> proprietario = proprietarioRepository.findById(proprietarioId);
+        return proprietario.orElse(null);
     }
 
-    @GetMapping("/proprietarios/findByNomeContaining")
-    public List<Proprietario> findByNameContaining() {
-        return proprietarioRepository.findByNomeContaining("the");
-    }
 }
