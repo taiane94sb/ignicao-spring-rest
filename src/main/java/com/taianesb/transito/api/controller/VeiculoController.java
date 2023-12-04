@@ -1,5 +1,6 @@
 package com.taianesb.transito.api.controller;
 
+import com.taianesb.transito.domain.exception.NegocioException;
 import com.taianesb.transito.domain.model.Veiculo;
 import com.taianesb.transito.domain.repository.VeiculoRepository;
 import com.taianesb.transito.domain.service.RegistroVeiculoService;
@@ -34,6 +35,11 @@ public class VeiculoController {
     @ResponseStatus(HttpStatus.CREATED)
     public Veiculo cadastrar(@RequestBody Veiculo veiculo) {
         return registroVeiculoService.cadastrar(veiculo);
+    }
+
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<String> capturar(NegocioException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
 }
