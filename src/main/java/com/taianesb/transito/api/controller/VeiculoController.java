@@ -1,5 +1,6 @@
 package com.taianesb.transito.api.controller;
 
+import com.taianesb.transito.api.assembler.VeiculoAssembler;
 import com.taianesb.transito.api.model.VeiculoModel;
 import com.taianesb.transito.domain.model.Veiculo;
 import com.taianesb.transito.domain.repository.VeiculoRepository;
@@ -20,25 +21,25 @@ public class VeiculoController {
 
     private final RegistroVeiculoService registroVeiculoService;
     private final VeiculoRepository veiculoRepository;
-    private final ModelMapper modelMapper;
+    private final VeiculoAssembler veiculoAssembler;
 
     @GetMapping
-    public List<Veiculo> listar() {
-        return veiculoRepository.findAll();
+    public List<VeiculoModel> listar() {
+        return veiculoAssembler.toCollectionModel(veiculoRepository.findAll());
     }
 
     @GetMapping("/{veiculoId}")
     public ResponseEntity<VeiculoModel> buscar(@PathVariable Long veiculoId) {
         return veiculoRepository.findById(veiculoId)
-                .map(veiculo -> modelMapper.map(veiculo, VeiculoModel.class))
+                .map(veiculoAssembler::toModel)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Veiculo cadastrar(@Valid @RequestBody Veiculo veiculo) {
-        return registroVeiculoService.cadastrar(veiculo);
+    public VeiculoModel cadastrar(@Valid @RequestBody Veiculo veiculo) {
+        return veiculoAssembler.toModel(registroVeiculoService.cadastrar(veiculo));
     }
 
 }
