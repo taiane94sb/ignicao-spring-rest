@@ -2,6 +2,7 @@ package com.taianesb.transito.api.controller;
 
 import com.taianesb.transito.api.assembler.VeiculoAssembler;
 import com.taianesb.transito.api.model.VeiculoModel;
+import com.taianesb.transito.api.model.input.VeiculoInput;
 import com.taianesb.transito.domain.model.Veiculo;
 import com.taianesb.transito.domain.repository.VeiculoRepository;
 import com.taianesb.transito.domain.service.RegistroVeiculoService;
@@ -38,8 +39,10 @@ public class VeiculoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public VeiculoModel cadastrar(@Valid @RequestBody Veiculo veiculo) {
-        return veiculoAssembler.toModel(registroVeiculoService.cadastrar(veiculo));
+    public VeiculoModel cadastrar(@Valid @RequestBody VeiculoInput veiculoInput) {
+        Veiculo novoVeiculo = veiculoAssembler.toEntity(veiculoInput);
+        Veiculo veiculoCadastrado = registroVeiculoService.cadastrar(novoVeiculo);
+        return veiculoAssembler.toModel(veiculoCadastrado);
     }
 
 }
